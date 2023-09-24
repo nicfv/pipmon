@@ -1,7 +1,9 @@
-import { Point } from './type';
+import { Engine } from './engine';
+import { Color } from './lib/color';
+import { Size } from './lib/size';
 
-function formatPoint(pt: Point): string {
-    return '(' + pt.x.toString() + ',' + pt.y.toString() + ')';
-}
 
-console.log(formatPoint(new Point(14, 60)));
+window.addEventListener('load', () => {
+    const game = new Engine(new Size(160, 144), new Size(800, 600), 60, new Color(255, 90, 0, 0.6), document.body);
+    game.start(f => [], console.log);
+});
