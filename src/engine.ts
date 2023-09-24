@@ -15,9 +15,8 @@ export class Engine {
      * @param display The actual display port size, in pixes
      * @param framesPerSecond The number of frames to compute and render every second
      * @param background The background color
-     * @param parent The parent element
      */
-    constructor(public readonly gamePx: Size, display: Size, private readonly framesPerSecond: number, background: Color, parent: Element) {
+    constructor(public readonly gamePx: Size, display: Size, private readonly framesPerSecond: number, background: Color) {
         this.frame = 0;
         this.keysDown = [];
         this.canvas = document.createElement('canvas');
@@ -29,21 +28,22 @@ export class Engine {
         this.canvas.style.width = display.width + 'px';
         this.canvas.style.height = display.height + 'px';
         this.canvas.style.imageRendering = 'pixelated';
-        parent.appendChild(this.canvas);
     }
     /**
      * Start the game loop.
+     * @param parent The game window will be shown within this element.
      * @param logic This is the game's main loop function. It should return an array of `Drawable` to render.
      * @param handler This function handles user keyboard input.
      */
-    public start(logic: (frame: number) => Array<Drawable>, handler: (e: InputEvent) => void) {
+    public start(parent: Element, logic: (frame: number) => Array<Drawable>, handler: (e: InputEvent) => void) {
+        parent.appendChild(this.canvas);
         this.canvas.addEventListener('keydown', e => {
             e.preventDefault();
             const key = e.key.toLowerCase();
             if (!this.keysDown.includes(key)) {
                 this.keysDown.push(key); // Add key if it does not exist.
             }
-            handler(new InputEvent(key, true, this.keysDown));
+            handler(new InputEvent(key, true));
         });
         this.canvas.addEventListener('keyup', e => {
             e.preventDefault();
@@ -52,7 +52,7 @@ export class Engine {
             if (index >= 0) {
                 this.keysDown.splice(index, 1); // Remove key if it exists.
             }
-            handler(new InputEvent(key, false, this.keysDown));
+            handler(new InputEvent(key, false));
         });
         setInterval(() => {
             if (this.canvas === document.activeElement) {
@@ -64,19 +64,23 @@ export class Engine {
         }, 1000 / this.framesPerSecond);
     }
     /**
-     * Check if a key is currently pressed.
+     * Check if a key is currently pressed. Not case sensitive.
      */
     public isKeyDown(key: string): boolean {
         return this.keysDown.includes(key.toLowerCase());
     }
 }
 
+/**
+ * Describes a user input action.
+ */
 export class InputEvent {
-    constructor(public readonly key: string, public readonly pressed: boolean, public readonly keysDown: Array<string>) {
-        this.key = key.toLowerCase();
-    }
+    constructor(public readonly key: string, public readonly pressed: boolean) { }
 }
 
+/**
+ * Base interface in which all visible game objects must be derived.
+ */
 export interface Drawable {
     draw(context: CanvasRenderingContext2D): void;
 }
