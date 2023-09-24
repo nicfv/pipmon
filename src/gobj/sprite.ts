@@ -45,7 +45,8 @@ export class Animation {
  */
 export class AnimatedSprite extends Sprite {
     private currentAnimationName: string;
-    private startingFrame: number;
+    private frame: number;
+    private complete: boolean;
     /**
      * Create a new animated sprite.
      * @param animations An map of possible animations this sprite can have
@@ -54,15 +55,19 @@ export class AnimatedSprite extends Sprite {
     constructor(private readonly animations: { [name: string]: Animation }, position: Vec2) {
         super(Object.values(animations)[0].sources[0], position);
         this.currentAnimationName = Object.keys(animations)[0];
-        this.startingFrame = 0;
+        this.frame = 0;
+        this.complete = false;
     }
     /**
      * Set the current animation name for this animated sprite. Starts the animation from the beginning.
      */
     public setAnimation(animationName: string): void {
         if (Object.keys(this.animations).includes(animationName)) {
-            this.currentAnimationName = animationName;
-            this.startingFrame = 0;
+            if (this.currentAnimationName !== animationName || this.complete) {
+                this.currentAnimationName = animationName;
+                this.frame = 0;
+                this.complete = false;
+            }
         } else {
             throw new Error('Animation `' + animationName + '` is not valid.');
         }
@@ -70,16 +75,13 @@ export class AnimatedSprite extends Sprite {
     /**
      * Animate this sprite. Call this function during the game's main logic loop. Returns whether the animation is complete.
      */
-    public animate(frame: number): boolean {
-        if (this.startingFrame === 0) {
-            this.startingFrame = frame;
-        }
+    public animate(): boolean {
         const currentAnimation = this.animations[this.currentAnimationName],
             animationFrames = currentAnimation.sources.length,
-            dt = frame - this.startingFrame,
-            idealImageIndex = Math.floor(dt / currentAnimation.animationSpeed),
+            idealImageIndex = Math.floor(this.frame++ / currentAnimation.animationSpeed),
             realImageIndex = currentAnimation.loop ? idealImageIndex % animationFrames : animationFrames - 1;
         this.setImage(currentAnimation.sources[realImageIndex]);
-        return currentAnimation.loop && idealImageIndex >= animationFrames;
+        this.complete = currentAnimation.loop && idealImageIndex >= animationFrames;
+        return this.complete;
     }
 }

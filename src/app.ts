@@ -8,22 +8,32 @@ const game = new Engine(new Size(160, 144), new Size(800, 600), 60, new Color(0,
 
 window.addEventListener('load', () => {
     const playerSprite = new AnimatedSprite({
-        'main': new Animation(['https://archives.bulbagarden.net/media/upload/4/47/Puzzle_Challenge_player.png', 'https://archives.bulbagarden.net/media/upload/d/d1/Player_Hey_You_Pikachu.png'], 15, true),
+        'down': new Animation(['img/r1.png', 'img/r2.png'], 15, true),
+        'up': new Animation(['img/g1.png', 'img/g2.png'], 15, true),
+        'left': new Animation(['img/b1.png', 'img/b2.png'], 15, true),
+        'right': new Animation(['img/y1.png', 'img/y2.png'], 15, true),
     }, new Vec2(50, 5));
     console.log(game.gamePx);
     game.start(document.body, f => {
-        playerSprite.animate(f);
         if (game.isKeyDown('a')) {
             playerSprite.move(new Vec2(-1, 0));
+            playerSprite.setAnimation('left');
+            playerSprite.animate();
         }
         if (game.isKeyDown('d')) {
             playerSprite.move(new Vec2(1, 0));
+            playerSprite.setAnimation('right');
+            playerSprite.animate();
         }
         if (game.isKeyDown('w')) {
             playerSprite.move(new Vec2(0, -1));
+            playerSprite.setAnimation('up');
+            playerSprite.animate();
         }
         if (game.isKeyDown('s')) {
             playerSprite.move(new Vec2(0, 1));
+            playerSprite.setAnimation('down');
+            playerSprite.animate();
         }
         return [playerSprite];
     }, console.log);
