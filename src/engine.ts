@@ -56,6 +56,7 @@ export class Engine {
         });
         setInterval(() => {
             if (this.canvas === document.activeElement) {
+                this.context.clearRect(0, 0, this.gamePx.width, this.gamePx.height);
                 const drawables = logic(this.frame++);
                 for (const drawable of drawables) {
                     drawable.draw(this.context);
@@ -82,5 +83,8 @@ export class InputEvent {
  * Base interface in which all visible game objects must be derived.
  */
 export interface Drawable {
+    /**
+     * Implement this function to draw the object in the game.
+     */
     draw(context: CanvasRenderingContext2D): void;
 }
