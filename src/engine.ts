@@ -42,8 +42,8 @@ export class Engine {
             const key = e.key.toLowerCase();
             if (!this.keysDown.includes(key)) {
                 this.keysDown.push(key); // Add key if it does not exist.
+                handler(new InputEvent(key, true));
             }
-            handler(new InputEvent(key, true));
         });
         this.canvas.addEventListener('keyup', e => {
             e.preventDefault();
@@ -51,8 +51,8 @@ export class Engine {
                 index = this.keysDown.indexOf(key);
             if (index >= 0) {
                 this.keysDown.splice(index, 1); // Remove key if it exists.
+                handler(new InputEvent(key, false));
             }
-            handler(new InputEvent(key, false));
         });
         setInterval(() => {
             if (this.canvas === document.activeElement) {
