@@ -1,8 +1,9 @@
 {
   "scripts": {
-      "setup": "cp -r src dist && rm -rf dist/*.js dist/*.ts dist/**/*.js dist/**/*.ts",
-      "dev": "tsc && npx -y esbuild@latest src/app.ts --bundle --watch --outfile=dist/app.js",
-      "build": "tsc && npx -y esbuild@latest src/app.ts --bundle --minify --outfile=dist/app.js",
-      "clean": "rm -rf dist"
+    "setup": "cp -r src dist && rm -rf dist/*.js dist/*.ts dist/**/*.js dist/**/*.ts",
+    "dev": "tsc && npx -y esbuild@latest src/app.ts --bundle --watch --outfile=dist/app.js",
+    "build": "tsc && npx -y esbuild@latest src/app.ts --bundle --minify --outfile=dist/app.js",
+    "docs": "npx -y typedoc@latest --entryPointStrategy expand ./src --out dist/devs",
+    "clean": "rm -rf dist"
   }
 }
