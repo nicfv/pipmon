@@ -1,25 +1,22 @@
 import { Drawable } from '../engine';
 import { Vec2 } from '../lib/vec';
+import { Tile } from './tileset';
 
 /**
  * Represents an image to be rendered in the game.
  */
 export class Sprite implements Drawable {
-    private readonly sprite: HTMLImageElement;
     /**
      * Create a new instance of a sprite.
-     * @param source The image source URI/URL
+     * @param tile The sprite image to render
      * @param position The starting position of this sprite
      */
-    constructor(source: string, private readonly position: Vec2) {
-        this.sprite = new Image();
-        this.sprite.src = source;
-    }
+    constructor(private tile: Tile, private readonly position: Vec2) { }
     /**
      * Change the source of the image.
      */
-    protected setImage(source: string): void {
-        this.sprite.src = source;
+    protected setImage(tile: Tile): void {
+        this.tile = tile;
     }
     /**
      * Move the sprite by some amount.
@@ -29,7 +26,7 @@ export class Sprite implements Drawable {
         this.position.y += direction.y;
     }
     public draw(context: CanvasRenderingContext2D): void {
-        context.drawImage(this.sprite, this.position.x, this.position.y);
+        this.tile.draw(context, this.position);
     }
 }
 
@@ -37,7 +34,7 @@ export class Sprite implements Drawable {
  * Create a new animation. The `animationSpeed` is the number of game frames in between animation frames.
  */
 export class Animation {
-    constructor(public readonly sources: Array<string>, public readonly animationSpeed: number, public readonly loop: boolean) { }
+    constructor(public readonly tiles: Array<Tile>, public readonly animationSpeed: number, public readonly loop: boolean) { }
 }
 
 /**
@@ -53,7 +50,7 @@ export class AnimatedSprite extends Sprite {
      * @param position The starting position for this animated sprite
      */
     constructor(private readonly animations: { [name: string]: Animation }, position: Vec2) {
-        super(Object.values(animations)[0].sources[0], position);
+        super(Object.values(animations)[0].tiles[0], position);
         this.currentAnimationName = Object.keys(animations)[0];
         this.frame = 0;
         this.complete = false;
@@ -77,10 +74,10 @@ export class AnimatedSprite extends Sprite {
      */
     public animate(): boolean {
         const currentAnimation = this.animations[this.currentAnimationName],
-            animationFrames = currentAnimation.sources.length,
+            animationFrames = currentAnimation.tiles.length,
             idealImageIndex = Math.floor(this.frame++ / currentAnimation.animationSpeed),
             realImageIndex = currentAnimation.loop ? idealImageIndex % animationFrames : animationFrames - 1;
-        this.setImage(currentAnimation.sources[realImageIndex]);
+        this.setImage(currentAnimation.tiles[realImageIndex]);
         this.complete = currentAnimation.loop && idealImageIndex >= animationFrames;
         return this.complete;
     }

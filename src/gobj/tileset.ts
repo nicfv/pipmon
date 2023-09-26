@@ -6,28 +6,34 @@ import { Vec2 } from '../lib/vec';
  */
 export class Tileset {
     private readonly tileset: HTMLImageElement;
-    private readonly tiles: Array<Array<Tile>>;
+    private loaded: boolean;
     /**
      * Generate a sequence of uniformly-sized images from a tileset source.
      * @param source The image source URI/URL
      * @param tileSize The uniform size of each tile
      */
-    constructor(source: string, tileSize: Size) {
+    constructor(source: string, private readonly tileSize: Size) {
         this.tileset = new Image();
         this.tileset.src = source;
-        this.tiles = [];
-        for (let x = 0; x < this.tileset.width; x += tileSize.width) {
-            this.tiles.push([]);
-            for (let y = 0; y < this.tileset.height; y += tileSize.height) {
-                this.tiles[x].push(new Tile((context, position) => context.drawImage(this.tileset, x, y, tileSize.width, tileSize.height, position.x, position.y, tileSize.width, tileSize.height)));
-            }
-        }
+        this.tileset.addEventListener('load', this.load);
+        this.loaded = false;
+    }
+    /**
+     * Raised when the tileset is finished loading.
+     */
+    private load(): void {
+        this.loaded = true;
     }
     /**
      * Return the tile from the specified position in the tileset.
      */
     public getTile(coordinates: Vec2): Tile {
-        return this.tiles[coordinates.x][coordinates.y];
+        if (coordinates.x < 0 || coordinates.y < 0 || (this.loaded && (coordinates.x > this.tileset.width || coordinates.y > this.tileset.height))) {
+            throw new Error('Tile coordinates are out of bounds.')
+        }
+        return new Tile((context, position) => context.drawImage(this.tileset,
+            coordinates.x * this.tileSize.width, coordinates.y * this.tileSize.height, this.tileSize.width, this.tileSize.height,
+            position.x, position.y, this.tileSize.width, this.tileSize.height));
     }
 }
 
@@ -36,7 +42,7 @@ export class Tileset {
  */
 export class Tile {
     /**
-     * Initialize a new instance of `Tile`. Should only be called in the `Tileset` class.
+     * Initialize a new instance of `Tile`. Should only be called from the `Tileset` class.
      * @param draw Draw the tile at the specified position on the game window.
      */
     constructor(public readonly draw: (context: CanvasRenderingContext2D, position: Vec2) => void) { }

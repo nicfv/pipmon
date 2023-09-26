@@ -1,5 +1,6 @@
 import { Engine } from './engine';
 import { AnimatedSprite, Animation } from './gobj/sprite';
+import { Tileset } from './gobj/tileset';
 import { Color } from './lib/color';
 import { Size } from './lib/size';
 import { Vec2 } from './lib/vec';
@@ -7,13 +8,13 @@ import { Vec2 } from './lib/vec';
 const game = new Engine(new Size(160, 144), new Size(800, 600), 60, new Color(0, 0, 0, 1));
 
 window.addEventListener('load', () => {
+    const tileset = new Tileset('img/tileset.png', new Size(16, 16));
     const playerSprite = new AnimatedSprite({
-        'down': new Animation(['img/r1.png', 'img/r2.png'], 15, true),
-        'up': new Animation(['img/g1.png', 'img/g2.png'], 15, true),
-        'left': new Animation(['img/b1.png', 'img/b2.png'], 15, true),
-        'right': new Animation(['img/y1.png', 'img/y2.png'], 15, true),
+        'down': new Animation([tileset.getTile(new Vec2(0, 2)), tileset.getTile(new Vec2(0, 3))], 15, true),
+        'up': new Animation([tileset.getTile(new Vec2(1, 2)), tileset.getTile(new Vec2(1, 3))], 15, true),
+        'left': new Animation([tileset.getTile(new Vec2(2, 2)), tileset.getTile(new Vec2(2, 3))], 15, true),
+        'right': new Animation([tileset.getTile(new Vec2(3, 2)), tileset.getTile(new Vec2(3, 3))], 15, true),
     }, new Vec2(50, 5));
-    console.log(game.gamePx);
     game.start(document.body, f => {
         if (game.isKeyDown('a')) {
             playerSprite.move(new Vec2(-1, 0));
