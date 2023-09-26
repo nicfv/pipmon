@@ -1,7 +1,7 @@
 /**
  * Provides a range of mathematical helper functions.
  */
-export class JMath {
+export abstract class JMath {
     /**
      * Clamp `num` in between `min` and `max`, inclusive.
      */

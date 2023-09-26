@@ -8,7 +8,7 @@ import { Vec2 } from './lib/vec';
 const game = new Engine(new Size(160, 144), new Size(800, 600), 60, new Color(0, 0, 0, 1));
 
 window.addEventListener('load', () => {
-    const tileset = new Tileset('img/tileset.png', new Size(16, 16));
+    const tileset = new Tileset('https://opengameart.org/sites/default/files/forestmock.gif', new Size(16, 16));
     const playerSprite = new AnimatedSprite({
         'down': new Animation([tileset.getTile(new Vec2(0, 2)), tileset.getTile(new Vec2(0, 3))], 15, true),
         'up': new Animation([tileset.getTile(new Vec2(1, 2)), tileset.getTile(new Vec2(1, 3))], 15, true),
