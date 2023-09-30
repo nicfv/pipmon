@@ -10,8 +10,9 @@ export class Sprite implements Drawable {
      * Create a new instance of a sprite.
      * @param tile The sprite image to render
      * @param position The starting position of this sprite
+     * @param offset The optional render offset, defaults to (0, 0)
      */
-    constructor(private tile: Tile, private readonly position: Vec2) { }
+    constructor(private tile: Tile, private readonly position: Vec2, private readonly offset: Vec2 = new Vec2(0, 0)) { }
     /**
      * Change the source of the image.
      */
@@ -21,12 +22,12 @@ export class Sprite implements Drawable {
     /**
      * Move the sprite by some amount.
      */
-    public move(direction: Vec2) {
+    protected move(direction: Vec2) {
         this.position.x += direction.x;
         this.position.y += direction.y;
     }
     public draw(context: CanvasRenderingContext2D): void {
-        this.tile.draw(context, this.position);
+        this.tile.draw(context, new Vec2(this.position.x + this.offset.x, this.position.y + this.offset.y));
     }
 }
 
@@ -48,9 +49,10 @@ export class AnimatedSprite extends Sprite {
      * Create a new animated sprite.
      * @param animations An map of possible animations this sprite can have
      * @param position The starting position for this animated sprite
+     * @param offset The optional render offset, defaults to (0, 0)
      */
-    constructor(private readonly animations: { [name: string]: Animation }, position: Vec2) {
-        super(Object.values(animations)[0].tiles[0], position);
+    constructor(private readonly animations: { [name: string]: Animation }, position: Vec2, offset: Vec2 = new Vec2(0, 0)) {
+        super(Object.values(animations)[0].tiles[0], position, offset);
         this.currentAnimationName = Object.keys(animations)[0];
         this.frame = 0;
         this.complete = false;
@@ -58,7 +60,7 @@ export class AnimatedSprite extends Sprite {
     /**
      * Set the current animation name for this animated sprite. Starts the animation from the beginning.
      */
-    public setAnimation(animationName: string): void {
+    protected setAnimation(animationName: string): void {
         if (Object.keys(this.animations).includes(animationName)) {
             if (this.currentAnimationName !== animationName || this.complete) {
                 this.currentAnimationName = animationName;
