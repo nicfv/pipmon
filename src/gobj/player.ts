@@ -34,7 +34,7 @@ export class Player extends AnimatedSprite<Direction> {
             ], 10, true),
         }, position, new Vec2(-8, -8));
     }
-    public go(direction: Direction): void {
+    public go(direction: Direction | 'none'): void {
         const dirVec2 = new Vec2(0, 0);
         switch (direction) {
             case ('down'): {
@@ -53,10 +53,15 @@ export class Player extends AnimatedSprite<Direction> {
                 dirVec2.y = -1;
                 break;
             }
+            case ('none'): {
+                super.stop();
+                return;
+            }
             default: {
                 throw new Error('Invalid direction ' + direction);
             }
         }
+        super.start();
         super.setAnimation(direction);
         super.move(dirVec2);
     }
