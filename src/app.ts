@@ -11,19 +11,15 @@ window.addEventListener('load', () => {
     game.start(document.body, f => {
         if (game.isKeyDown('a')) {
             player.go('left');
-            player.animate();
         }
         if (game.isKeyDown('d')) {
             player.go('right');
-            player.animate();
         }
         if (game.isKeyDown('w')) {
             player.go('up');
-            player.animate();
         }
         if (game.isKeyDown('s')) {
             player.go('down');
-            player.animate();
         }
         return [player];
     }, console.log);

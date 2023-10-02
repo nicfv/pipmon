@@ -5,7 +5,7 @@ import { Tile } from './tileset';
 /**
  * Represents an image to be rendered in the game.
  */
-export class Sprite implements Drawable {
+export abstract class Sprite implements Drawable {
     /**
      * Create a new instance of a sprite.
      * @param tile The sprite image to render
@@ -41,10 +41,11 @@ export class Animation {
 /**
  * Represents an animated version of `Sprite`
  */
-export class AnimatedSprite extends Sprite {
+export abstract class AnimatedSprite extends Sprite {
     private currentAnimationName: string;
     private frame: number;
     private complete: boolean;
+    private play: boolean;
     /**
      * Create a new animated sprite.
      * @param animations An map of possible animations this sprite can have
@@ -56,9 +57,11 @@ export class AnimatedSprite extends Sprite {
         this.currentAnimationName = Object.keys(animations)[0];
         this.frame = 0;
         this.complete = false;
+        this.play = false;
     }
     /**
      * Set the current animation name for this animated sprite. Starts the animation from the beginning.
+     * Note: Animation only plays after calling `AnimatedSprite.start()` or `AnimatedSprite.restart()`
      */
     protected setAnimation(animationName: string): void {
         if (Object.keys(this.animations).includes(animationName)) {
@@ -72,15 +75,49 @@ export class AnimatedSprite extends Sprite {
         }
     }
     /**
-     * Animate this sprite. Call this function during the game's main logic loop. Returns whether the animation is complete.
+     * Start the animation if not yet started.
      */
-    public animate(): boolean {
-        const currentAnimation = this.animations[this.currentAnimationName],
-            animationFrames = currentAnimation.tiles.length,
-            idealImageIndex = Math.floor(this.frame++ / currentAnimation.animationSpeed),
-            realImageIndex = currentAnimation.loop ? idealImageIndex % animationFrames : animationFrames - 1;
-        this.setImage(currentAnimation.tiles[realImageIndex]);
-        this.complete = currentAnimation.loop && idealImageIndex >= animationFrames;
-        return this.complete;
+    protected start(): void {
+        this.play = true;
+    }
+    /**
+     * Restart the animation from the beginning.
+     */
+    protected restart(): void {
+        this.frame = 0;
+        this.complete = false;
+        this.play = true;
+    }
+    /**
+     * Pause the animation.
+     */
+    protected pause(): void {
+        this.play = false;
+    }
+    /**
+     * Stop the animation.
+     */
+    protected stop(): void {
+        this.frame = 0;
+        this.complete = false;
+        this.play = false;
+    }
+    /**
+     * Callback function called every time a non-looping animation is completed.
+     */
+    protected abstract onAnimationComplete(): void;
+    public draw(context: CanvasRenderingContext2D): void {
+        if (!this.complete) {
+            const currentAnimation = this.animations[this.currentAnimationName],
+                animationFrames = currentAnimation.tiles.length,
+                idealImageIndex = Math.floor((this.frame += +this.play) / currentAnimation.animationSpeed),
+                realImageIndex = currentAnimation.loop ? idealImageIndex % animationFrames : animationFrames - 1;
+            this.setImage(currentAnimation.tiles[realImageIndex]);
+            this.complete = !currentAnimation.loop && idealImageIndex >= animationFrames;
+            if (this.complete) {
+                this.onAnimationComplete();
+            }
+        }
+        super.draw(context);
     }
 }

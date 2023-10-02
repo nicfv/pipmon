@@ -59,4 +59,7 @@ export class Player extends AnimatedSprite {
         super.setAnimation(direction);
         super.move(dirVec2);
     }
+    protected onAnimationComplete(): void {
+        // TODO: Not necessary to inherit...
+    }
 }
