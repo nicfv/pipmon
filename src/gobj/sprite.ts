@@ -41,8 +41,8 @@ export class Animation {
 /**
  * Represents an animated version of `Sprite`
  */
-export abstract class AnimatedSprite extends Sprite {
-    private currentAnimationName: string;
+export abstract class AnimatedSprite<AnimType extends string> extends Sprite {
+    private currentAnimationName: AnimType;
     private frame: number;
     private complete: boolean;
     private play: boolean;
@@ -52,9 +52,10 @@ export abstract class AnimatedSprite extends Sprite {
      * @param position The starting position for this animated sprite
      * @param offset The optional render offset, defaults to (0, 0)
      */
-    constructor(private readonly animations: { [name: string]: Animation }, position: Vec2, offset: Vec2 = new Vec2(0, 0)) {
-        super(Object.values(animations)[0].tiles[0], position, offset);
-        this.currentAnimationName = Object.keys(animations)[0];
+    constructor(private readonly animations: { [key in AnimType]: Animation }, position: Vec2, offset: Vec2 = new Vec2(0, 0)) {
+        const firstAnimation = Object.entries(animations)[0];
+        super((firstAnimation[1] as Animation).tiles[0], position, offset);
+        this.currentAnimationName = firstAnimation[0] as AnimType;
         this.frame = 0;
         this.complete = false;
         this.play = false;
@@ -63,7 +64,7 @@ export abstract class AnimatedSprite extends Sprite {
      * Set the current animation name for this animated sprite. Starts the animation from the beginning.
      * Note: Animation only plays after calling `AnimatedSprite.start()` or `AnimatedSprite.restart()`
      */
-    protected setAnimation(animationName: string): void {
+    protected setAnimation(animationName: AnimType): void {
         if (Object.keys(this.animations).includes(animationName)) {
             if (this.currentAnimationName !== animationName || this.complete) {
                 this.currentAnimationName = animationName;

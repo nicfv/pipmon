@@ -2,8 +2,9 @@ import { Size } from '../lib/size';
 import { Vec2 } from '../lib/vec';
 import { AnimatedSprite, Animation } from './sprite';
 import { Tileset } from './tileset';
+import { Direction } from './types';
 
-export class Player extends AnimatedSprite {
+export class Player extends AnimatedSprite<Direction> {
     private static readonly TS = new Tileset('img/player.png', new Size(32, 32));
     constructor(position: Vec2) {
         super({
@@ -33,7 +34,7 @@ export class Player extends AnimatedSprite {
             ], 10, true),
         }, position, new Vec2(-8, -8));
     }
-    public go(direction: 'down' | 'left' | 'right' | 'up'): void {
+    public go(direction: Direction): void {
         const dirVec2 = new Vec2(0, 0);
         switch (direction) {
             case ('down'): {
