@@ -106,7 +106,7 @@ export abstract class AnimatedSprite<AnimType extends string> extends Sprite {
     /**
      * Callback function called every time a non-looping animation is completed.
      */
-    protected abstract onAnimationComplete(): void;
+    protected onAnimationComplete(): void { };
     public draw(context: CanvasRenderingContext2D): void {
         if (!this.complete) {
             const currentAnimation = this.animations[this.currentAnimationName],

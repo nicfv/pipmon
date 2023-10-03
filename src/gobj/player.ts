@@ -4,8 +4,17 @@ import { AnimatedSprite, Animation } from './sprite';
 import { Tileset } from './tileset';
 import { Direction } from './types';
 
+/**
+ * Represents the main player character in the game.
+ */
 export class Player extends AnimatedSprite<Direction> {
     private static readonly TS = new Tileset('img/player.png', new Size(32, 32));
+    private static readonly WALK_TURN_DELAY = 5;
+    private facing: Direction;
+    private delayRemaining: number;
+    /**
+     * Initialize a player character.
+     */
     constructor(position: Vec2) {
         super({
             'down': new Animation([
@@ -33,8 +42,29 @@ export class Player extends AnimatedSprite<Direction> {
                 Player.TS.getTile(new Vec2(3, 3)),
             ], 10, true),
         }, position, new Vec2(-8, -8));
+        this.facing = 'down';
+        this.delayRemaining = 0;
+        super.setAnimation(this.facing);
     }
-    public go(direction: Direction | 'none'): void {
+    /**
+     * Make the player walk in a specified direction.
+     */
+    public walk(direction: Direction | 'none'): void {
+        if (direction === 'none') {
+            super.stop();
+            return;
+        }
+        if (direction !== this.facing) {
+            this.facing = direction;
+            this.delayRemaining = Player.WALK_TURN_DELAY;
+            this.setAnimation(this.facing);
+            super.stop();
+            return;
+        }
+        if (this.delayRemaining > 0) {
+            this.delayRemaining--;
+            return;
+        }
         const dirVec2 = new Vec2(0, 0);
         switch (direction) {
             case ('down'): {
@@ -53,19 +83,11 @@ export class Player extends AnimatedSprite<Direction> {
                 dirVec2.y = -1;
                 break;
             }
-            case ('none'): {
-                super.stop();
-                return;
-            }
             default: {
                 throw new Error('Invalid direction ' + direction);
             }
         }
         super.start();
-        super.setAnimation(direction);
         super.move(dirVec2);
-    }
-    protected onAnimationComplete(): void {
-        // TODO: Not necessary to inherit...
     }
 }

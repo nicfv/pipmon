@@ -32,7 +32,7 @@ export class Engine {
     /**
      * Start the game loop.
      * @param parent The game window will be shown within this element.
-     * @param logic This is the game's main loop function. It should return an array of `Drawable` to render.
+     * @param logic This is the game's main loop function. It should return an array of `Drawable` in order of render priority.
      * @param handler This function handles user keyboard input.
      */
     public start(parent: Element, logic: (frame: number) => Array<Drawable>, handler: (e: InputEvent) => void) {
@@ -57,7 +57,7 @@ export class Engine {
         setInterval(() => {
             if (this.canvas === document.activeElement) {
                 this.context.clearRect(0, 0, this.gamePx.width, this.gamePx.height);
-                const drawables = logic(this.frame++);
+                const drawables = logic(this.frame++).reverse();
                 for (const drawable of drawables) {
                     drawable.draw(this.context);
                 }
