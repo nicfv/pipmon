@@ -1,14 +1,15 @@
 import { Size } from '../lib/size';
 import { Vec2 } from '../lib/vec';
 import { AnimatedSprite, Animation } from './sprite';
-import { Tileset } from './tileset';
+import { Flip, Tileset } from './tileset';
 import { Direction, TILE_SIZE } from './types';
 
 /**
  * Represents the main player character in the game.
  */
 export class Player extends AnimatedSprite<Direction> {
-    private static readonly TS = new Tileset('img/player.png', new Size(32, 32));
+    // TODO: https://www.spriters-resource.com/game_boy_advance/pokemonemerald/
+    private static readonly TS = new Tileset('https://www.spriters-resource.com/resources/sheets/8/8324.png', new Size(15, 22));
     private static readonly WALK_TURN_DELAY = 5;
     private facing: Direction;
     private delayRemaining: number;
@@ -20,29 +21,29 @@ export class Player extends AnimatedSprite<Direction> {
         super({
             'down': new Animation([
                 Player.TS.getTile(new Vec2(0, 0)),
-                Player.TS.getTile(new Vec2(1, 0)),
-                Player.TS.getTile(new Vec2(2, 0)),
-                Player.TS.getTile(new Vec2(3, 0)),
+                Player.TS.getTile(new Vec2(0, 1)),
+                Player.TS.getTile(new Vec2(0, 0)),
+                Player.TS.getTile(new Vec2(0, 2)),
             ], 10, true),
             'left': new Animation([
-                Player.TS.getTile(new Vec2(0, 1)),
-                Player.TS.getTile(new Vec2(1, 1)),
+                Player.TS.getTile(new Vec2(2, 0)),
                 Player.TS.getTile(new Vec2(2, 1)),
-                Player.TS.getTile(new Vec2(3, 1)),
+                Player.TS.getTile(new Vec2(2, 0)),
+                Player.TS.getTile(new Vec2(2, 2)),
             ], 10, true),
             'right': new Animation([
-                Player.TS.getTile(new Vec2(0, 2)),
-                Player.TS.getTile(new Vec2(1, 2)),
-                Player.TS.getTile(new Vec2(2, 2)),
-                Player.TS.getTile(new Vec2(3, 2)),
+                Player.TS.getTile(new Vec2(2, 0), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 1), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 0), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 2), new Flip(true, false)),
             ], 10, true),
             'up': new Animation([
-                Player.TS.getTile(new Vec2(0, 3)),
-                Player.TS.getTile(new Vec2(1, 3)),
-                Player.TS.getTile(new Vec2(2, 3)),
-                Player.TS.getTile(new Vec2(3, 3)),
+                Player.TS.getTile(new Vec2(1, 0)),
+                Player.TS.getTile(new Vec2(1, 1)),
+                Player.TS.getTile(new Vec2(1, 0)),
+                Player.TS.getTile(new Vec2(1, 2)),
             ], 10, true),
-        }, new Vec2(tilePosition.x * TILE_SIZE.width, tilePosition.y * TILE_SIZE.height), new Vec2(-8, -16));
+        }, new Vec2(tilePosition.x * TILE_SIZE.width, tilePosition.y * TILE_SIZE.height), new Vec2(0, -6));
         this.facing = 'down';
         this.delayRemaining = 0;
         this.walking = false;

@@ -22,7 +22,7 @@ export abstract class Sprite implements Drawable {
     /**
      * Move the sprite by some amount.
      */
-    protected move(direction: Vec2) {
+    protected move(direction: Vec2): void {
         this.position.x += direction.x;
         this.position.y += direction.y;
     }

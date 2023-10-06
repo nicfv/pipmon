@@ -12,18 +12,18 @@ type MapTileType = 'grass' | 'water';
  * Defines a tile within the overworld in the game.
  */
 export class MapTile extends AnimatedSprite<MapTileType> {
-    private static readonly TS = new Tileset('img/ts2.png', new Size(16, 16));
+    // TODO: https://www.spriters-resource.com/game_boy_advance/pokemonemerald/
+    private static readonly TS = new Tileset('https://www.spriters-resource.com/resources/sheets/59/61816.png', new Size(16, 16));
     /**
      * Create a new tile for the map.
      */
     constructor(type: MapTileType, position: Vec2) {
         super({
             'grass': new Animation([
-                MapTile.TS.getTile(new Vec2(0, 0)),
                 MapTile.TS.getTile(new Vec2(1, 0)),
             ], 100, true),
             'water': new Animation([
-                MapTile.TS.getTile(new Vec2(1, 23)),
+                MapTile.TS.getTile(new Vec2(38, 0)),
             ], 100, true),
         }, position);
         super.setAnimation(type);
