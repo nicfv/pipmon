@@ -37,6 +37,7 @@ export class Engine {
      */
     public start(parent: Element, logic: (frame: number) => Array<Drawable>, handler: (e: InputEvent) => void) {
         parent.appendChild(this.canvas);
+        this.canvas.focus();
         this.canvas.addEventListener('keydown', e => {
             e.preventDefault();
             const key = e.key.toLowerCase();
