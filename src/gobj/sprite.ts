@@ -12,7 +12,7 @@ export abstract class Sprite implements Drawable {
      * @param position The starting position of this sprite
      * @param offset The optional render offset, defaults to (0, 0)
      */
-    constructor(private tile: Tile, private readonly position: Vec2, private readonly offset: Vec2 = new Vec2(0, 0)) { }
+    constructor(private tile: Tile, protected readonly position: Vec2, private readonly offset: Vec2 = new Vec2(0, 0)) { }
     /**
      * Change the source of the image.
      */

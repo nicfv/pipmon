@@ -2,7 +2,7 @@ import { Size } from '../lib/size';
 import { Vec2 } from '../lib/vec';
 import { AnimatedSprite, Animation } from './sprite';
 import { Tileset } from './tileset';
-import { Direction } from './types';
+import { Direction, TILE_SIZE } from './types';
 
 /**
  * Represents the main player character in the game.
@@ -12,10 +12,11 @@ export class Player extends AnimatedSprite<Direction> {
     private static readonly WALK_TURN_DELAY = 5;
     private facing: Direction;
     private delayRemaining: number;
+    private walking: boolean;
     /**
      * Initialize a player character.
      */
-    constructor(position: Vec2) {
+    constructor(tilePosition: Vec2) {
         super({
             'down': new Animation([
                 Player.TS.getTile(new Vec2(0, 0)),
@@ -41,17 +42,22 @@ export class Player extends AnimatedSprite<Direction> {
                 Player.TS.getTile(new Vec2(2, 3)),
                 Player.TS.getTile(new Vec2(3, 3)),
             ], 10, true),
-        }, position, new Vec2(-8, -8));
+        }, new Vec2(tilePosition.x * TILE_SIZE.width, tilePosition.y * TILE_SIZE.height), new Vec2(-8, -16));
         this.facing = 'down';
         this.delayRemaining = 0;
+        this.walking = false;
         super.setAnimation(this.facing);
     }
     /**
      * Make the player walk in a specified direction.
      */
     public walk(direction: Direction | 'none'): void {
+        if (this.walking && (this.position.x % TILE_SIZE.width || this.position.y % TILE_SIZE.height)) {
+            direction = this.facing;
+        }
         if (direction === 'none') {
             super.stop();
+            this.walking = false;
             return;
         }
         if (direction !== this.facing) {
@@ -59,6 +65,7 @@ export class Player extends AnimatedSprite<Direction> {
             this.delayRemaining = Player.WALK_TURN_DELAY;
             this.setAnimation(this.facing);
             super.stop();
+            this.walking = false;
             return;
         }
         if (this.delayRemaining > 0) {
@@ -89,5 +96,6 @@ export class Player extends AnimatedSprite<Direction> {
         }
         super.start();
         super.move(dirVec2);
+        this.walking = true;
     }
 }
