@@ -27,14 +27,16 @@ jobs:
     outputs:
       local_version: ${{ env.VER }}
       published_version: ${{ env.WEB }}
+    env:
+      URL: https://pipmon.com
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Get Versions
         run: |
-          echo "VER=$(grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9](?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r)' CHANGELOG.md | head -n1)" >> "${GITHUB_ENV}"
-          # echo "WEB=$(curl '${{ steps.deployment.outputs.page_url }}/version')" >> "${GITHUB_ENV}"
-          echo "WEB=0.0.0" >> "${GITHUB_ENV}"
+          echo "VER=$(grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9](?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r)' CHANGELOG.md | head -n1)" >> "${GITHUB_OUTPUT}"
+          # echo "WEB=$(curl '${{ env.URL }}/version')" >> "${GITHUB_OUTPUT}"
+          echo "WEB=0.0.0" >> "${GITHUB_OUTPUT}"
   deploy:
     needs: check
     if: needs.check.outputs.local_version != needs.check.outputs.published_version
@@ -56,8 +58,8 @@ jobs:
           npm run docs
       - name: Write Version
         run: |
-          echo "${{ env.VER }}" > dist/version
-          sed -i "s/%VERSION%/${{ env.VER }}/g" dist/*
+          echo "${{ needs.check.outputs.local_version }}" > dist/version
+          sed -i "s/%VERSION%/${{ needs.check.outputs.local_version }}/g" dist/*.* dist/**/*.*
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
