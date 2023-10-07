@@ -22,15 +22,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get Versions
+        run: |
+          echo "VER=$(grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9](?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r)' CHANGELOG.md | head -n1)" >> "${GITHUB_ENV}"
+          # echo "WEB=$(curl '${{ steps.deployment.outputs.page_url }}/version')" >> "${GITHUB_ENV}"
+          echo "WEB=0.0.0" >> "${GITHUB_ENV}"
   deploy:
+    if: ${{ env.VER }} != ${{ env.WEB }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -40,6 +48,10 @@ jobs:
           npm run setup
           npm run build
           npm run docs
+      - name: Write Version
+        run: |
+          echo "${{ env.VER }}" > dist/version
+          sed -i "s/%VERSION%/${{ env.VER }}/g" dist/*
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
