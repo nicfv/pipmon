@@ -25,18 +25,23 @@ jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      local_version: ${{ env.VER }}
-      published_version: ${{ env.WEB }}
+      local_version: ${{ steps.get-ver.outputs.VER }}
+      published_version: ${{ steps.get-ver.outputs.WEB }}
     env:
       URL: https://pipmon.com
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Get Versions
+        id: get-ver
         run: |
           echo "VER=$(grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9](?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r)' CHANGELOG.md | head -n1)" >> "${GITHUB_OUTPUT}"
           # echo "WEB=$(curl '${{ env.URL }}/version')" >> "${GITHUB_OUTPUT}"
           echo "WEB=0.0.0" >> "${GITHUB_OUTPUT}"
+      - name: Write Versions
+        run: |
+          echo '**Local Version**: `${{ steps.get-ver.outputs.VER }}`' >> "${GITHUB_STEP_SUMMARY}"
+          echo '**Published Version**: `${{ steps.get-ver.outputs.WEB }}`' >> "${GITHUB_STEP_SUMMARY}"
   deploy:
     needs: check
     if: needs.check.outputs.local_version != needs.check.outputs.published_version
