@@ -19,11 +19,14 @@ permissions:
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      local_version: ${{ env.VER }}
+      published_version: ${{ env.WEB }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,12 +36,15 @@ jobs:
           # echo "WEB=$(curl '${{ steps.deployment.outputs.page_url }}/version')" >> "${GITHUB_ENV}"
           echo "WEB=0.0.0" >> "${GITHUB_ENV}"
   deploy:
-    if: true
+    needs: check
+    if: needs.check.outputs.local_version != needs.check.outputs.published_version
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
