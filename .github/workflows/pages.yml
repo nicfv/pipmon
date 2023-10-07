@@ -33,7 +33,7 @@ jobs:
           # echo "WEB=$(curl '${{ steps.deployment.outputs.page_url }}/version')" >> "${GITHUB_ENV}"
           echo "WEB=0.0.0" >> "${GITHUB_ENV}"
   deploy:
-    if: ${{ env.VER }} != ${{ env.WEB }}
+    if: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
