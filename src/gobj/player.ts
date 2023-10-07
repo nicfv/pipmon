@@ -20,30 +20,30 @@ export class Player extends AnimatedSprite<Direction> {
     constructor(tilePosition: Vec2) {
         super({
             'down': new Animation([
-                Player.TS.getTile(new Vec2(0, 0)),
-                Player.TS.getTile(new Vec2(0, 1)),
-                Player.TS.getTile(new Vec2(0, 0)),
-                Player.TS.getTile(new Vec2(0, 2)),
+                Player.TS.getTile(new Vec2(0, 0), new Vec2(0, -6)),
+                Player.TS.getTile(new Vec2(0, 1), new Vec2(0, -5)),
+                Player.TS.getTile(new Vec2(0, 0), new Vec2(0, -6)),
+                Player.TS.getTile(new Vec2(0, 2), new Vec2(0, -5)),
             ], 10, true),
             'left': new Animation([
-                Player.TS.getTile(new Vec2(2, 0)),
-                Player.TS.getTile(new Vec2(2, 1)),
-                Player.TS.getTile(new Vec2(2, 0)),
-                Player.TS.getTile(new Vec2(2, 2)),
+                Player.TS.getTile(new Vec2(2, 0), new Vec2(0, -6)),
+                Player.TS.getTile(new Vec2(2, 1), new Vec2(-1, -5)),
+                Player.TS.getTile(new Vec2(2, 0), new Vec2(0, -6)),
+                Player.TS.getTile(new Vec2(2, 2), new Vec2(0, -5)),
             ], 10, true),
             'right': new Animation([
-                Player.TS.getTile(new Vec2(2, 0), new Flip(true, false)),
-                Player.TS.getTile(new Vec2(2, 1), new Flip(true, false)),
-                Player.TS.getTile(new Vec2(2, 0), new Flip(true, false)),
-                Player.TS.getTile(new Vec2(2, 2), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 0), new Vec2(0, -6), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 1), new Vec2(-1, -5), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 0), new Vec2(0, -6), new Flip(true, false)),
+                Player.TS.getTile(new Vec2(2, 2), new Vec2(0, -5), new Flip(true, false)),
             ], 10, true),
             'up': new Animation([
-                Player.TS.getTile(new Vec2(1, 0)),
-                Player.TS.getTile(new Vec2(1, 1)),
-                Player.TS.getTile(new Vec2(1, 0)),
-                Player.TS.getTile(new Vec2(1, 2)),
+                Player.TS.getTile(new Vec2(1, 0), new Vec2(0, -6)),
+                Player.TS.getTile(new Vec2(1, 1), new Vec2(0, -5)),
+                Player.TS.getTile(new Vec2(1, 0), new Vec2(0, -6)),
+                Player.TS.getTile(new Vec2(1, 2), new Vec2(0, -5)),
             ], 10, true),
-        }, new Vec2(tilePosition.x * TILE_SIZE.width, tilePosition.y * TILE_SIZE.height), new Vec2(0, -6));
+        }, new Vec2(tilePosition.x * TILE_SIZE.width, tilePosition.y * TILE_SIZE.height));
         this.facing = 'down';
         this.delayRemaining = 0;
         this.walking = false;

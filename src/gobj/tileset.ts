@@ -1,3 +1,4 @@
+import { Rectangle } from '../lib/rect';
 import { Size } from '../lib/size';
 import { Vec2 } from '../lib/vec';
 
@@ -15,28 +16,28 @@ export class Tileset {
     constructor(source: string, private readonly tileSize: Size) {
         this.tileset = new Image();
         this.tileset.src = source;
-        this.tileset.addEventListener('load', this.load);
+        this.tileset.addEventListener('load', () => this.loaded = true);
         this.loaded = false;
     }
     /**
-     * Raised when the tileset is finished loading.
+     * Return the tile from the specified position in the tileset. Optionally include a render offset from the top-left and flip type.
      */
-    private load(): void {
-        this.loaded = true;
-    }
-    /**
-     * Return the tile from the specified position in the tileset.
-     */
-    public getTile(coordinates: Vec2, flipType: Flip = new Flip(false, false)): Tile {
-        if (coordinates.x < 0 || coordinates.y < 0 || (this.loaded && (coordinates.x > this.tileset.width || coordinates.y > this.tileset.height))) {
-            throw new Error('Tile coordinates are out of bounds.')
-        }
+    public getTile(coordinates: Vec2, offset: Vec2 = new Vec2(0, 0), flipType: Flip = new Flip(false, false)): Tile {
+        const source = new Rectangle(coordinates.x * this.tileSize.width, coordinates.y * this.tileSize.height, this.tileSize.width, this.tileSize.height);
         return new Tile((context, position) => {
+            if (!this.loaded) {
+                return;
+            }
+            const tilesetRect = new Rectangle(0, 0, this.tileset.width, this.tileset.height);
+            // console.log(source, tilesetRect, source.intersect(tilesetRect));
+            if (!source.intersect(tilesetRect)) {
+                throw new Error('Tile coordinates are out of bounds.')
+            }
             context.save();
-            context.translate(position.x, position.y);
+            context.translate(position.x + offset.x * flipType.scaleX, position.y + offset.y * flipType.scaleY);
             context.scale(Math.sign(flipType.scaleX), Math.sign(flipType.scaleY));
             context.drawImage(this.tileset,
-                coordinates.x * this.tileSize.width, coordinates.y * this.tileSize.height, this.tileSize.width, this.tileSize.height,
+                source.x, source.y, source.width, source.height,
                 0, 0, this.tileSize.width * flipType.scaleX, this.tileSize.height * flipType.scaleY);
             context.restore();
         });

@@ -10,9 +10,8 @@ export abstract class Sprite implements Drawable {
      * Create a new instance of a sprite.
      * @param tile The sprite image to render
      * @param position The starting position of this sprite
-     * @param offset The optional render offset, defaults to (0, 0)
      */
-    constructor(private tile: Tile, protected readonly position: Vec2, private readonly offset: Vec2 = new Vec2(0, 0)) { }
+    constructor(private tile: Tile, protected readonly position: Vec2) { }
     /**
      * Change the source of the image.
      */
@@ -27,7 +26,7 @@ export abstract class Sprite implements Drawable {
         this.position.y += direction.y;
     }
     public draw(context: CanvasRenderingContext2D): void {
-        this.tile.draw(context, new Vec2(this.position.x + this.offset.x, this.position.y + this.offset.y));
+        this.tile.draw(context, this.position);
     }
 }
 
@@ -50,11 +49,10 @@ export abstract class AnimatedSprite<AnimType extends string> extends Sprite {
      * Create a new animated sprite.
      * @param animations An map of possible animations this sprite can have
      * @param position The starting position for this animated sprite
-     * @param offset The optional render offset, defaults to (0, 0)
      */
-    constructor(private readonly animations: { [key in AnimType]: Animation }, position: Vec2, offset: Vec2 = new Vec2(0, 0)) {
+    constructor(private readonly animations: { [key in AnimType]: Animation }, position: Vec2) {
         const firstAnimation = Object.entries(animations)[0];
-        super((firstAnimation[1] as Animation).tiles[0], position, offset);
+        super((firstAnimation[1] as Animation).tiles[0], position);
         this.currentAnimationName = firstAnimation[0] as AnimType;
         this.frame = 0;
         this.complete = false;
