@@ -26,24 +26,38 @@ jobs:
     name: Check Versions
     runs-on: ubuntu-latest
     outputs:
-      local_version: ${{ steps.get-ver.outputs.VER }}
-      published_version: ${{ steps.get-ver.outputs.WEB }}
+      local_version: ${{ steps.changelogver.outputs.VER }}
+      published_version: ${{ steps.publishedver.outputs.WEB }}
     env:
       URL: https://pipmon.com
     steps:
-      - name: Get Versions
-        id: get-ver
+      - name: Get Changelog Version
+        id: changelogver
         run: |
-          echo "VER=$(curl -s 'https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/CHANGELOG.md' | grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9]+(?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r?$)' | head -n1)" >> "${GITHUB_OUTPUT}"
+          H2="$(curl -s 'https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/CHANGELOG.md' | grep -E '^## .+$' | head -n1)"
+          VER_MATCH='^## (([0-9]+\.[0-9]+\.[0-9]+) \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]|Unreleased).?$'
+          if [[ "${H2}" =~ ${VER_MATCH} ]] ; then
+              if [[ "${BASH_REMATCH[2]}" ]] ; then
+                  echo "VER=${BASH_REMATCH[2]}" # >> "${GITHUB_OUTPUT}"
+              else
+                  echo "VER=${BASH_REMATCH[1]}" # >> "${GITHUB_OUTPUT}"
+              fi
+          else
+              echo -e "Invalid line:\n\`\`\`md\n${H2}\n\`\`\`" >> "${GITHUB_STEP_SUMMARY}"
+              exit 1
+          fi
+      - name: Get Published Version
+        id: publishedver
+        run: |
           echo "WEB=$(curl -s '${{ env.URL }}/version')" >> "${GITHUB_OUTPUT}"
       - name: Write Versions
         run: |
-          echo '**Local Version**: `${{ steps.get-ver.outputs.VER }}`' >> "${GITHUB_STEP_SUMMARY}"
-          echo '**Published Version**: `${{ steps.get-ver.outputs.WEB }}`' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'Local Version: `${{ steps.changelogver.outputs.VER }}`' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'Published Version: `${{ steps.publishedver.outputs.WEB }}`' >> "${GITHUB_STEP_SUMMARY}"
   deploy:
     name: Deploy Pages
     needs: check
-    if: needs.check.outputs.local_version != needs.check.outputs.published_version
+    if: needs.check.outputs.local_version != 'Unreleased' && needs.check.outputs.local_version != needs.check.outputs.published_version
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
