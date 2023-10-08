@@ -16,10 +16,18 @@ Please keep all contributions in **English**, and all code contributions in **Ty
 
 ## Logging Changes
 
-When making a change to the code base, please log all changes in [CHANGELOG.md](./CHANGELOG.md) using markdown syntax. The latest changes are always added to the top, under the file heading. The latest version notes should include the [version number](#version-numbers) and the date format `MMM DD, YYYY` exactly, wrapped in square brackets. Single-digit days do not have a leading zero. You may copy this template to get started.
+When making a change to the code base, please log all changes in [CHANGELOG.md](./CHANGELOG.md) using markdown syntax. The latest changes are always added to the top, under the file heading. The latest version notes should include the [version number](#version-numbers) and the date formatted exactly `MMM DD, YYYY` wrapped in square brackets. Single-digit days do not have a leading zero. You may copy this template to get started.
 
 ```md
 ## 0.0.0 [Jan 1, 2000]
+
+- Please add changes here.
+```
+
+Or for unreleased changes, copy this template.
+
+```md
+## Unreleased
 
 - Please add changes here.
 ```
