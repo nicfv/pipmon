@@ -2,7 +2,7 @@
 
 Thank you for visiting `nicfv/pipmon`, the official Pipmon repository! Participation by contributing is allowed, and highly encouraged. This document outlines how to make contributions of all kinds to Pipmon.
 
-Please always honor the code of conduct to keep our community a safe place for all.
+Please always honor the [code of conduct](./CODE_OF_CONDUCT.md) to keep our community a safe place for all.
 
 ## Logging Changes
 
