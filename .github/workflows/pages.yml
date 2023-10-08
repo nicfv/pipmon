@@ -26,8 +26,8 @@ jobs:
     name: Check Versions
     runs-on: ubuntu-latest
     outputs:
-      local_version: ${{ steps.changelogver.outputs.VER }}
-      published_version: ${{ steps.publishedver.outputs.WEB }}
+      local_version: ${{ steps.versions.outputs.VER }}
+      published_version: ${{ steps.versions.outputs.WEB }}
     env:
       URL: https://pipmon.com
     steps:
@@ -43,7 +43,7 @@ jobs:
   deploy:
     name: Deploy Pages
     needs: check
-    if: needs.check.outputs.local_version != 'Unreleased' && needs.check.outputs.local_version != needs.check.outputs.published_version
+    if: needs.check.outputs.local_version != needs.check.outputs.published_version
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
