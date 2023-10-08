@@ -1,6 +1,6 @@
 # Changelog
 
-### Unreleased
+## Unreleased
 
 - GitHub Workflow Updates
     - Website is only re-published when the version number changes in CHANGELOG
@@ -12,7 +12,9 @@
 - Tile & Tileset:
     - Improve tileset error checking for drawing tiles out-of-bounds
     - Offset now belongs to tiles, not sprites
-- Define map tilesets outside of constructor
+- Maps
+    - Define map tilesets outside of constructor
+    - Can parse JSON data to construct floor maps
 
 ## 0.0.8 [Oct 5, 2023]
 

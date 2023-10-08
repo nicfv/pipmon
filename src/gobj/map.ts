@@ -1,7 +1,9 @@
+import { Drawable } from '../engine';
 import { Size } from '../lib/size';
 import { Vec2 } from '../lib/vec';
 import { AnimatedSprite, Animation } from './sprite';
 import { Tileset } from './tileset';
+import { TILE_SIZE } from './types';
 
 /**
  * Define the different tile types that can appear in the map.
@@ -26,8 +28,24 @@ export class MapTile extends AnimatedSprite<MapTileType> {
      * Create a new tile for the map.
      */
     constructor(type: MapTileType, position: Vec2) {
-        super(MapTile.ANIMATIONS, position);
+        super(MapTile.ANIMATIONS, new Vec2(position.x * TILE_SIZE.width, position.y * TILE_SIZE.height));
         super.setAnimation(type);
         super.start();
+    }
+}
+
+/**
+ * Represents a map of floor tiles.
+ */
+export class FloorMap implements Drawable {
+    private readonly mapTiles: Array<MapTile>;
+    /**
+     * Load and parse floor map data.
+     */
+    constructor(data: Array<any>) {
+        this.mapTiles = data.map(obj => new MapTile(obj['type'], new Vec2(obj['x'], obj['y'])));
+    }
+    draw(context: CanvasRenderingContext2D): void {
+        this.mapTiles.forEach(tile => tile.draw(context));
     }
 }
