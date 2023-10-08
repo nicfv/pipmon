@@ -34,7 +34,7 @@ jobs:
       - name: Get Versions
         id: get-ver
         run: |
-          echo "VER=$(curl --silent 'https://raw.githubusercontent.com/${{ github.repository }}/main/CHANGELOG.md' | grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9](?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r?$)' | head -n1)" >> "${GITHUB_OUTPUT}"
+          echo "VER=$(curl --silent 'https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/CHANGELOG.md' | grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9](?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r?$)' | head -n1)" >> "${GITHUB_OUTPUT}"
           echo "WEB=$(curl '${{ env.URL }}/version')" >> "${GITHUB_OUTPUT}"
       - name: Write Versions
         run: |

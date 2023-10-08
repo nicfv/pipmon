@@ -2,7 +2,9 @@
 
 ## Unreleased [Oct 7, 2023]
 
-- GitHub Workflow: Website is only re-published when the version number changes in CHANGELOG
+- GitHub Workflow Updates
+    - Website is only re-published when the version number changes in CHANGELOG
+    - The special string `%VERSION%` found in any of the compiled files is replaced by the version number
 - Add changes to CHANGELOG
 - Add rectangle class that can check for intersections
 - Tile & Tileset:
