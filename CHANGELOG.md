@@ -7,6 +7,7 @@
     - The special string `%VERSION%` found in any of the compiled files is replaced by the version number
 - Add changes to CHANGELOG
 - Add [contributing guidelines](./CONTRIBUTING.md)
+- Add [code of conduct](./CODE_OF_CONDUCT.md)
 - Add rectangle class that can check for intersections
 - Tile & Tileset:
     - Improve tileset error checking for drawing tiles out-of-bounds
@@ -65,5 +66,5 @@
 
 ## 0.0.0 [Jul 8, 2023]
 
-- Added index page
-- Added changelog
+- Add index page
+- Add changelog
