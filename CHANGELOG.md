@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+### Unreleased
 
 - GitHub Workflow Updates
     - Website is only re-published when the version number changes in CHANGELOG
