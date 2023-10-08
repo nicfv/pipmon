@@ -1,11 +1,8 @@
 # Changelog
 
-## 0.0.9 [Aaa 1, 0000]
-
-- For testing, will delete this section.
-
 ## Unreleased [Oct 7, 2023]
 
+- GitHub Workflow: Website is only re-published when the version number changes in CHANGELOG
 - Add changes to CHANGELOG
 - Add rectangle class that can check for intersections
 - Tile & Tileset:

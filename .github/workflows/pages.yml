@@ -41,7 +41,7 @@ jobs:
           echo '**Local Version**: `${{ steps.get-ver.outputs.VER }}`' >> "${GITHUB_STEP_SUMMARY}"
           echo '**Published Version**: `${{ steps.get-ver.outputs.WEB }}`' >> "${GITHUB_STEP_SUMMARY}"
   deploy:
-    name: Deploy
+    name: Deploy Pages
     needs: check
     if: needs.check.outputs.local_version != needs.check.outputs.published_version
     environment:
