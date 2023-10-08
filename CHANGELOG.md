@@ -6,6 +6,7 @@
     - Website is only re-published when the version number changes in CHANGELOG
     - The special string `%VERSION%` found in any of the compiled files is replaced by the version number
 - Add changes to CHANGELOG
+- Add [contributing guidelines](./CONTRIBUTING.md)
 - Add rectangle class that can check for intersections
 - Tile & Tileset:
     - Improve tileset error checking for drawing tiles out-of-bounds
