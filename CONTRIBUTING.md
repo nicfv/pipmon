@@ -4,6 +4,16 @@ Thank you for visiting `nicfv/pipmon`, the official Pipmon repository! Participa
 
 Please always honor the [code of conduct](./CODE_OF_CONDUCT.md) to keep our community a safe place for all.
 
+## Ways to Contribute
+
+Raise an [issue](https://github.com/nicfv/pipmon/issues) or open a [pull request](https://github.com/nicfv/pipmon/pulls).
+
+More information will be provided along with the development of Pipmon.
+
+## Language
+
+Please keep all contributions in **English**, and all code contributions in **Typescript**, or any of the other languages used in this repository.
+
 ## Logging Changes
 
 When making a change to the code base, please log all changes in [CHANGELOG.md](./CHANGELOG.md) using markdown syntax. The latest changes are always added to the top, under the file heading. The latest version notes should include the [version number](#version-numbers) and the date format `MMM DD, YYYY` exactly, wrapped in square brackets. Single-digit days do not have a leading zero. You may copy this template to get started.
