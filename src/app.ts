@@ -10,7 +10,8 @@ const game = new Engine(new Size(160, 144), new Size(800, 600), 60, new Color(0,
 window.addEventListener('load', () => {
     const player = new Player(new Vec2(0, 0));
     let map = new FloorMap([]);
-    fetch('data/map-test.json').then(value => value.json()).then(json => map = new FloorMap(json));
+    fetch('http://localhost:5072/world/data').then(v => v.json()).then(j => map = new FloorMap(j));
+
     game.start(document.body, f => {
         if (game.isKeyDown('a')) {
             player.walk('left');
