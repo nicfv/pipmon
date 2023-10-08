@@ -39,7 +39,7 @@ jobs:
           echo "VER=$(grep -oP '(?<=^## )[0-9]+\.[0-9]+.[0-9]+(?= \[[A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4}\]\r?$)' < CHANGELOG.md | head -n1)" >> "${GITHUB_OUTPUT}"
           echo "WEB=$(curl -s '${{ env.URL }}/version')" >> "${GITHUB_OUTPUT}"
       - name: Write Versions
-        run: echo -e '| Version Type | Number |\n| -- | -- |\n| Lastest Valid Changelog | `${{ steps.versions.outputs.VER }}` |\n| Currently Published | ${{ steps.versions.outputs.WEB }} |\n\n*If the latest changelog version does not match what is expected, please verify that it matches this pattern exactly.*\n\n```\n## 0.0.0 [Jan 1, 2000]\n```' >> "${GITHUB_STEP_SUMMARY}"
+        run: echo -e '| Version Type | Number |\n| -- | -- |\n| Lastest Valid Changelog | `${{ steps.versions.outputs.VER }}` |\n| Currently Published | `${{ steps.versions.outputs.WEB }}` |\n\n*If the latest changelog version does not match what is expected, please verify that it matches this pattern exactly.*\n\n```\n## 0.0.0 [Jan 1, 2000]\n```' >> "${GITHUB_STEP_SUMMARY}"
   deploy:
     name: Deploy Pages
     needs: check

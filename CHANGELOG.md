@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Minor fix in workflow summary
+
 ## 0.0.9 [Oct 7, 2023]
 
 - GitHub Workflow Updates
