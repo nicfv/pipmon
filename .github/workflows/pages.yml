@@ -38,13 +38,13 @@ jobs:
           VER_MATCH='^## (([0-9]+\.[0-9]+\.[0-9]+) \[([A-Z][a-z]{2} [1-9][0-9]?, [0-9]{4})\]|Unreleased).?$'
           if [[ "${H2}" =~ ${VER_MATCH} ]] ; then
               if [[ "${BASH_REMATCH[2]}" ]] ; then
-                  echo "VER=${BASH_REMATCH[2]}" # >> "${GITHUB_OUTPUT}"
+                  echo "VER=${BASH_REMATCH[2]}" >> "${GITHUB_OUTPUT}"
                   if [[ "${BASH_REMATCH[3]}" != "$(date +'%b %-d, %Y')" ]] ; then
                     echo 'Date should be set to today.' >> "${GITHUB_STEP_SUMMARY}"
                     exit 1
                   fi
               else
-                  echo "VER=${BASH_REMATCH[1]}" # >> "${GITHUB_OUTPUT}"
+                  echo "VER=${BASH_REMATCH[1]}" >> "${GITHUB_OUTPUT}"
               fi
           else
               echo -e "Invalid line:\n\`\`\`md\n${H2}\n\`\`\`" >> "${GITHUB_STEP_SUMMARY}"
