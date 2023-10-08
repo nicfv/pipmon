@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.9 [Oct 7, 2023]
 
 - GitHub Workflow Updates
     - Website is only re-published when the version number changes in CHANGELOG
